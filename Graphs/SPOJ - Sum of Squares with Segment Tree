@@ -1,0 +1,125 @@
+#include <bits/stdc++.h>
+using namespace std;
+//Define 󰊕 󰆧
+#define int long long
+#define endl '\n'
+#define fi first
+#define se second
+#define pb push_back
+#define all(x) x.begin(),x.end()
+//Const 󰏿
+const int N = 2e5 + 5, mod = 1e9 + 7, INF = 2e18 + 5, plushy = 1e6;
+//Global Array 󰅠 󰅪
+int a[N];
+struct Node {
+    int st1 = 0, st2 = 0;
+    int lza = 0, lzs = 0;
+    bool vs = false;
+} st[N * 4];
+//Gobal Variable 󰅠 󰆧 
+//Function 󰊕
+Node merge(Node a, Node b) {
+    Node res;
+    res.st1 = a.st1 + b.st1;
+    res.st2 = a.st2 + b.st2;
+    return res;
+}
+void apps(int id, int l, int r, int val) {
+    int len = r - l + 1;
+    st[id].st1 = len * val;
+    st[id].st2 = len * val * val;
+    st[id].lzs = val;
+    st[id].vs = true;
+    st[id].lza = 0;
+}
+void appa(int id, int l, int r, int val) {
+    int len = r - l + 1;
+    st[id].st2 += 2 * val * st[id].st1 + len * val * val;
+    st[id].st1 += len * val;
+    st[id].lza += val;
+}
+void push(int id, int l, int r) {
+    int mid = (l + r) / 2;
+    if (st[id].vs) {
+        apps(2 * id, l, mid, st[id].lzs);
+        apps(2 * id + 1, mid + 1, r, st[id].lzs);
+        st[id].vs = false;
+    }
+    if (st[id].lza != 0) {
+        appa(2 * id, l, mid, st[id].lza);
+        appa(2 * id + 1, mid + 1, r, st[id].lza);
+        st[id].lza = 0;
+    }
+}
+void build(int id, int l, int r) {
+    st[id] = Node();
+    if (l == r) {
+        st[id].st1 = a[l];
+        st[id].st2 = a[l] * a[l];
+        return;
+    }
+    int mid = (l + r) / 2;
+    build(2 * id, l, mid);
+    build(2 * id + 1, mid + 1, r);
+    st[id] = merge(st[2 * id], st[2 * id + 1]);
+}
+void update_add(int id, int l, int r, int u, int v, int val) {
+    if (u > r || v < l) return;
+    if (u <= l && r <= v) { appa(id, l, r, val); return; }
+    push(id, l, r);
+    int mid = (l + r) / 2;
+    update_add(2 * id, l, mid, u, v, val);
+    update_add(2 * id + 1, mid + 1, r, u, v, val);
+    st[id] = merge(st[2 * id], st[2 * id + 1]);
+}
+void update_set(int id, int l, int r, int u, int v, int val) {
+    if (u > r || v < l) return;
+    if (u <= l && r <= v) { apps(id, l, r, val); return; }
+    push(id, l, r);
+    int mid = (l + r) / 2;
+    update_set(2 * id, l, mid, u, v, val);
+    update_set(2 * id + 1, mid + 1, r, u, v, val);
+    st[id] = merge(st[2 * id], st[2 * id + 1]);
+}
+Node get_sq(int id, int l, int r, int u, int v) {
+    if (u > r || v < l) return Node();
+    if (u <= l && r <= v) return st[id];
+    push(id, l, r);
+    int mid = (l + r) / 2;
+    return merge(get_sq(2 * id, l, mid, u, v), get_sq(2 * id + 1, mid + 1, r, u, v));
+}
+//↓ Include solution here ↓
+void solve(int tc){
+    int n, q;
+    cin >> n >> q;
+    for (int i = 1; i <= n; i++) cin >> a[i];
+    build(1, 1, n);
+    cout << "Case " << tc << ":" << endl;
+    while (q--) {
+        int t, u, v, x;
+        cin >> t;
+        if (t == 0) {
+            cin >> u >> v >> x;
+            update_set(1, 1, n, u, v, x);
+        } else if (t == 1) {
+            cin >> u >> v >> x;
+            update_add(1, 1, n, u, v, x);
+        } else {
+            cin >> u >> v;
+            cout << get_sq(1, 1, n, u, v).st2 << endl;
+        }
+    }
+}
+//↑ Include solution here ↑
+//Deep function ↓ 󰒓 󰊕
+signed main(){
+    if (fopen("in.inp", "r")) 
+        freopen("out.out", "w", stdout), freopen("in.inp", "r", stdin);
+    ios::sync_with_stdio(0),cin.tie(0),cout.tie(0);
+    int tc = 1; cin >> tc;
+    for(int i = 1; i <= tc; i++) solve(i);
+}
+//This is the minimal version of Main.cpp
+//Cleaner, more good looking, but miss some extensions
+//If the problem need some functions, should use the classic Main.cpp
+//Made by Emais, or maybe Iamdog(95 || _Hungler), l zbbh rhuqa
