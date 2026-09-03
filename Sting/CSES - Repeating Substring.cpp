@@ -13,27 +13,27 @@ const int N = 6e5 + 5, mod = 1e9 + 7, INF = 2e18 + 5, base = 311, base2 = 367, m
 int n;
 string s;
 int h[N], h2[N], Pow[N], Pow2[N];
-pair<pair<int, int>, int> ans[N];
+pair<pair<int, int>, int> subs[N];
 //Gobal Variable 󰅠 󰆧 
 //Function 󰊕
 inline int getH(int l, int r) {
-    return (h[r] - h[l - 1] * Pow[r - l + 1] % mod + mod * mod) % mod;
+    return (h[r] - (h[l - 1] * Pow[r - l + 1]) % mod + mod) % mod;
 }
 inline int getH2(int l, int r) {
-    return (h2[r] - h2[l - 1] * Pow2[r - l + 1] % mod2 + mod2 * mod2) % mod2;
+    return (h2[r] - (h2[l - 1] * Pow2[r - l + 1]) % mod2 + mod2) % mod2;
 }
 int check(int len) {
     if (len == 0) return -1;
     int sz = 0;
     for (int i = 1; i <= n - len + 1; ++i) {
-        ans[sz++] = {{getH(i, i + len - 1), getH2(i, i + len - 1)}, i - 1};
+        subs[sz++] = {{getH(i, i + len - 1), getH2(i, i + len - 1)}, i - 1};
     }
 
-    sort(ans, ans + sz);
+    sort(subs, subs + sz);
 
     for (int i = 1; i < sz; ++i) {
-        if (ans[i].fi == ans[i - 1].fi) {
-            return ans[i].se;
+        if (subs[i].fi == subs[i - 1].fi) {
+            return subs[i].se;
         }
     }
     return -1;
