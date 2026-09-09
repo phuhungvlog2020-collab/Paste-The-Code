@@ -6,7 +6,7 @@ using namespace std;
 #define se second
 #define pb push_back
 #define all(x) x.begin(),x.end()
-const int N = 6e5 + 5, mod = 1e9 + 7, INF = 2e18 + 5, base = 311, base2 = 367, mod2 = 1e9 + 9;
+const int N = 1500 + 5, mod = 1e9 + 7, INF = 2e18 + 5, base = 311, base2 = 367, mod2 = 1e9 + 9;
 string s;
 string b;
 int Pow[N], Pow2[N], h[N], h2[N];
@@ -15,10 +15,10 @@ int pref[N];
 int k;
 int lens, lenb;
 int ans;
-map<int, bool> vs;
-map<int, bool> vs2;
+unordered_map<int, bool> vs;
+unordered_map<int, bool> vs2;
 void prepare(){
-    Pow[1] = 1, Pow2[1] = 1;
+    Pow[0] = 1, Pow2[0] = 1;
     for(int i = 1; i <= lens; i++) Pow[i] = (Pow[i - 1] * base) % mod;
     for(int i = 1; i <= lens; i++) Pow2[i] = (Pow2[i - 1] * base2) % mod2;
     for(int i = 1; i <= lens; i++) h[i] = (h[i - 1] * base + (s[i] - 'a' + 1)) % mod;
@@ -51,14 +51,14 @@ void solve(int tc){
         for(int j = i; j <= lens; j++){
             int hash = getH(i, j);
             int hash2 = getH2(i, j);
-            cout << i << " " << j << " " << hash << " " << hash2 << " ";
+            // cout << i << " " << j << " " << hash << " " << hash2 << " ";
             if(pref[j] - pref[i - 1] <= k && (!vs[hash] || !vs2[hash2])){
-                cout << "CHOSE";
+                // cout << "CHOSE";
                 vs[hash] = 1;
                 vs2[hash2] = 1;
                 ans++;
             }
-            cout << endl;
+            // cout << endl;
         }
     }
     cout << ans << endl;
