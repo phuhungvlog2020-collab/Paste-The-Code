@@ -10,7 +10,7 @@ const int N = 2e5 + 5, mod = 1e9 + 7, INF = 2e18 + 5, base = 311, base2 = 367, m
 int a, b;
 string str;
 int btw(int id, int p, bool l, bool s) {
-    if (id == (int)str.size()) {
+    if (id == str.size()) {
         return s ? 1 : 0;
     }
 
