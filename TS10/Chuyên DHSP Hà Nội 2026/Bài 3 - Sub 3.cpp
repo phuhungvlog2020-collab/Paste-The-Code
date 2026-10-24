@@ -41,7 +41,7 @@ void solve() {
         int k;
         cin >> k;
         int l = 1, r = 1, sum = 0, fsum = 0, mx = 0;
-        while(r <= n){
+        while(r <= n && l <= r){
             sum += a[r];
             fsum = sum - (get(1, 1, n, l, r) >> 1);
             if(fsum <= k){
@@ -49,9 +49,9 @@ void solve() {
                 // cout << l << ' ' << r << ' ' << sum << endl;
             }
             else{
-                while(fsum > k){
-                    l++;
+                while(l <= r && fsum > k){
                     sum -= a[l];
+                    l++;
                     fsum = sum - (get(1, 1, n, l, r) >> 1);
                 }
             }
@@ -69,3 +69,4 @@ signed main() {
 }
 // Top Security script document of Menlonian Ground Forces, WE-30 information document
 // Collected by Rasonian Infantry Forces hosted by Rasonian Republic, operation "Я собака" status: "MISSING", ?/?/2030
+ 
